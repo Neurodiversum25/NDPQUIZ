@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurodiverse Persönlichkeiten Quiz</title>
+    <style>
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+        .hidden {
+            display: none;
+        }
+        .portrait {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: url('person.jpg') center/cover;
+            filter: blur(10px);
+            transition: filter 0.5s ease-in-out;
+        }
+        .flip-container {
+            perspective: 1000px;
+            width: 250px;
+            height: 250px;
+            margin: auto;
+        }
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+        .flip-card .front, .flip-card .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .flip-card .front {
+            background: url('person.jpg') center/cover;
+        }
+        .flip-card .back {
+            background: #ffffff;
+            color: black;
+            transform: rotateY(180deg);
+        }
+        .flipped {
+            transform: rotateY(180deg);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #007AFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="start-screen" class="quiz-container">
+        <h2 id="intro-text">Willkommen zum Neurodiversen Persönlichkeiten Quiz!</h2>
+        <p id="description">Teste dein Wissen über berühmte Persönlichkeiten und entdecke ihre einzigartigen Geschichten.</p>
+        <button onclick="toggleLanguage()">Switch to English</button>
+        <br><br>
+        <button onclick="startQuiz()">Quiz starten</button>
+    </div>
+
+    <div id="quiz-screen" class="quiz-container hidden">
+        <h2 id="question">Who is this famous person?</h2>
+        <div class="flip-container">
+            <div class="flip-card" id="flipCard">
+                <div class="front portrait" id="portrait"></div>
+                <div class="back" id="bio"></div>
+            </div>
+        </div>
+        <button onclick="revealImage()">Answer Correctly</button>
+        <button onclick="flipCard()">Flip to See Bio</button>
+    </div>
+
+    <script>
+        let language = "de";
+        let personalities = {
+            "de": [
+                {name: "Adam Levine", diagnosis: "ADHS", quote: "Musik hilft mir, mich zu fokussieren."},
+                {name: "Anthony Hopkins", diagnosis: "Autismus", quote: "Erhielt seine Diagnose erst spät im Leben."},
+                {name: "Barry Keoghan", diagnosis: "ADHS", quote: "Wurde erst in seinen Zwanzigern diagnostiziert."},
+                {name: "Emma Watson", diagnosis: "ADHS", quote: "Anders zu sein ist ein Geschenk."}
+            ],
+            "en": [
+                {name: "Adam Levine", diagnosis: "ADHD", quote: "Music helps me focus."},
+                {name: "Anthony Hopkins", diagnosis: "Autism", quote: "Received his diagnosis late in life."},
+                {name: "Barry Keoghan", diagnosis: "ADHD", quote: "Diagnosed in his late twenties."},
+                {name: "Emma Watson", diagnosis: "ADHD", quote: "Being different is a gift."}
+            ]
+        };
+        
+        function toggleLanguage() {
+            language = (language === "de") ? "en" : "de";
+            document.getElementById("intro-text").innerText = language === "de" ? "Willkommen zum Neurodiversen Persönlichkeiten Quiz!" : "Welcome to the Neurodiverse Personalities Quiz!";
+            document.getElementById("description").innerText = language === "de" ? "Teste dein Wissen über berühmte Persönlichkeiten und entdecke ihre einzigartigen Geschichten." : "Test your knowledge about famous personalities and discover their unique stories.";
+            document.querySelector("button").innerText = language === "de" ? "Switch to English" : "Wechsel zu Deutsch";
+            document.querySelector("button:last-of-type").innerText = language === "de" ? "Quiz starten" : "Start Quiz";
+        }
+        
+        function startQuiz() {
+            document.getElementById("start-screen").classList.add("hidden");
+            document.getElementById("quiz-screen").classList.remove("hidden");
+            loadPersonality();
+        }
+        
+        function loadPersonality() {
+            let person = personalities[language][0];
+            document.getElementById("question").innerText = language === "de" ? "Wer ist diese berühmte Person?" : "Who is this famous person?";
+            document.getElementById("bio").innerHTML = `<p><strong>${person.name}</strong><br>${language === "de" ? "Diagnose: " : "Diagnosed with "}${person.diagnosis}<br>"${person.quote}"</p>`;
+        }
+        function revealImage() {
+            document.getElementById("portrait").style.filter = "blur(0px)";
+        }
+        function flipCard() {
+            document.getElementById("flipCard").classList.add("flipped");
+        }
+    </script>
+</body>
+</html>
